@@ -1,0 +1,5 @@
+- name: Install and build React app from client folder
+  working-directory: ./client
+  run: |
+    npm ci
+    npm run build
