@@ -6,7 +6,7 @@ import {
 import { auth, googleProvider } from "../firebase/config";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import googleIcon from "./assets/google-icon.png";
+import googleIcon from "../assets/google-icon.png";
 
 const Login = () => {
     const navigate = useNavigate();
