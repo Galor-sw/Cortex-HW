@@ -8,7 +8,6 @@ import TrafficChart from "../components/trafficChart";
 
 const Dashboard = () => {
     const [user, setUser] = useState(null);
-    const [role, setRole] = useState("");
     const [loading, setLoading] = useState(true);
     const [trafficData, setTrafficData] = useState([]);
     const [viewType, setViewType] = useState("table");
@@ -32,13 +31,9 @@ const Dashboard = () => {
                 const roleDoc = await getDoc(doc(db, "roles", currentUser.uid));
                 if (!roleDoc.exists()) {
                     await setDoc(doc(db, "roles", currentUser.uid), { role: "viewer" });
-                    setRole("viewer");
-                } else {
-                    setRole(roleDoc.data().role);
                 }
             } catch (error) {
                 console.error("Error fetching role:", error.message);
-                setRole("viewer");
             } finally {
                 setLoading(false);
             }
