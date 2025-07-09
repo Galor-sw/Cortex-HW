@@ -45,11 +45,14 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchTrafficStats = async () => {
             try {
-                const snapshot = await getDocs(collection(db, "trafficStats"));
-                const data = snapshot.docs.map((doc) => doc.data());
-                setTrafficData(data);
+                const response = await fetch("https://us-central1-cortex-hw.cloudfunctions.net/getTrafficData");
+                const data = await response.json();
+                console.log(data)
+                const sorted = data.sort((a, b) => new Date(a.date) - new Date(b.date));
+                setTrafficData(sorted);
+                
             } catch (error) {
-                console.error("Error fetching traffic stats:", error);
+                console.error("Error fetching traffic stats from cloud function:", error);
             }
         };
 
