@@ -30,7 +30,11 @@ const Login = () => {
             await signInWithEmailAndPassword(auth, email, password);
             navigate("/dashboard");
         } catch (error) {
-            setError(error.message);
+            if (error.code === "auth/invalid-credential") {
+                setError("Invalid email or password.");
+            } else {
+                setError(error.message);
+            }
         }
     };
 
@@ -40,7 +44,13 @@ const Login = () => {
             await createUserWithEmailAndPassword(auth, email, password);
             navigate("/dashboard");
         } catch (error) {
-            setError(error.message);
+            if (error.code === "auth/invalid-credential") {
+                setError("Invalid email or password.");
+            } else if (error.code === "auth/email-already-in-use") {
+                setError("This email is already registered. Please log in instead.");
+            } else {
+                setError(error.message);
+            }
         }
     };
 
@@ -53,10 +63,7 @@ const Login = () => {
                 )}
                 <form onSubmit={handleEmailLogin} className="space-y-3 mb-4">
                     <div>
-                        <label
-                            htmlFor="email"
-                            className="block text-sm font-medium text-gray-700 mb-1"
-                        >
+                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
                             Email
                         </label>
                         <input
@@ -69,10 +76,7 @@ const Login = () => {
                         />
                     </div>
                     <div>
-                        <label
-                            htmlFor="password"
-                            className="block text-sm font-medium text-gray-700 mb-1"
-                        >
+                        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
                             Password
                         </label>
                         <input
