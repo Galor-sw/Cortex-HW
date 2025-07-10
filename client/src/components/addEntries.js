@@ -52,7 +52,7 @@ const AddEntries = ({
             setNewVisits("");
             setShowForm(false);
         } catch (err) {
-            console.error("❌ Error adding entry:", err.message);
+            console.error("Error adding entry:", err.message);
             alert("Failed to add entry.");
         } finally {
             setLoading(false);
@@ -81,7 +81,7 @@ const AddEntries = ({
                         onChange={(e) => setNewVisits(e.target.value)}
                     />
                 </label>
-                <div className="flex justify-end gap-2">
+                <div className="flex justify-center gap-2">
                     <button
                         className="px-4 py-1 bg-gray-300 rounded hover:bg-gray-400"
                         onClick={() => setShowForm(false)}

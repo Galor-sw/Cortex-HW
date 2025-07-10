@@ -69,3 +69,27 @@ exports.addTrafficEntry = functions.https.onRequest((req, res) => {
         }
     });
 });
+
+exports.updateTrafficEntry = functions.https.onRequest((req, res) => {
+    corsHandler(req, res, async () => {
+        if (req.method !== "PUT") {
+            return res.status(405).send("Method Not Allowed");
+        }
+
+        const { id, date, visits } = req.body;
+
+        if (!id || !date || typeof visits !== "number") {
+            return res.status(400).send("Missing or invalid parameters");
+        }
+
+        try {
+            const db = admin.firestore();
+            const docRef = db.collection("trafficStats").doc(id);
+            await docRef.update({ date, visits });
+            res.status(200).send("Entry updated successfully");
+        } catch (error) {
+            console.error("Error updating entry:", error);
+            res.status(500).send("Internal Server Error");
+        }
+    });
+});

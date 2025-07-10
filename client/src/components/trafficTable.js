@@ -4,6 +4,7 @@ import { getDoc, doc } from "firebase/firestore";
 import editIcon from "../assets/edit.png";
 import deleteIcon from "../assets/delete.png";
 import AddEntries from "./addEntries";
+import UpdateEntries from "./updateEntries";
 
 const TrafficTable = ({ trafficData, setTrafficData, onDelete }) => {
     const [currentSort, setCurrentSort] = useState("random");
@@ -12,6 +13,8 @@ const TrafficTable = ({ trafficData, setTrafficData, onDelete }) => {
     const [newDate, setNewDate] = useState("");
     const [newVisits, setNewVisits] = useState("");
     const [isEditor, setIsEditor] = useState(false);
+    const [showUpdateForm, setShowUpdateForm] = useState(false);
+    const [entryToEdit, setEntryToEdit] = useState(null);
 
     useEffect(() => {
         const checkUserRole = async () => {
@@ -150,6 +153,10 @@ const TrafficTable = ({ trafficData, setTrafficData, onDelete }) => {
                                                 alt="Edit"
                                                 title="Edit"
                                                 className="w-5 h-5 cursor-pointer"
+                                                onClick={() => {
+                                                    setEntryToEdit(entry);
+                                                    setShowUpdateForm(true);
+                                                }}
                                             />
                                             <img
                                                 src={deleteIcon}
@@ -179,6 +186,30 @@ const TrafficTable = ({ trafficData, setTrafficData, onDelete }) => {
                     setShowForm={setShowForm}
                     setTrafficData={setTrafficData}
                     currentSort={currentSort}
+                />
+            )}
+            {showUpdateForm && entryToEdit && (
+                <UpdateEntries
+                    entry={entryToEdit}
+                    onClose={() => {
+                        setShowUpdateForm(false);
+                        setEntryToEdit(null);
+                    }}
+                    onUpdateSuccess={(updatedEntry) => {
+                        const updatedList = trafficData.map((e) =>
+                            e.id === updatedEntry.id ? updatedEntry : e
+                        );
+
+                        if (currentSort === "date") {
+                            updatedList.sort((a, b) => new Date(b.date) - new Date(a.date));
+                        } else if (currentSort === "visits") {
+                            updatedList.sort((a, b) => b.visits - a.visits);
+                        }
+
+                        setTrafficData(updatedList);
+                        setShowUpdateForm(false);
+                        setEntryToEdit(null);
+                    }}
                 />
             )}
         </div>
