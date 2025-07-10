@@ -4,7 +4,7 @@ import { auth } from "../firebase/config";
 import { Navigate } from "react-router-dom";
 
 const AuthGuard = ({ children }) => {
-    const [user, setUser] = useState(undefined); // undefined = still checking
+    const [user, setUser] = useState(undefined);
 
     useEffect(() => {
         const unsub = onAuthStateChanged(auth, (u) => setUser(u));

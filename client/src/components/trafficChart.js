@@ -3,7 +3,7 @@ import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "rec
 
 const TrafficChart = ({ trafficData }) => {
     const [filteredData, setFilteredData] = useState([]);
-    const [viewMode, setViewMode] = useState(() => localStorage.getItem("viewMode") || "day"); // 'day' | 'month' | 'year'
+    const [viewMode, setViewMode] = useState(() => localStorage.getItem("viewMode") || "day");
     const [selectedMonth, setSelectedMonth] = useState("2025-03");
     const [selectedYear, setSelectedYear] = useState("2025");
 
