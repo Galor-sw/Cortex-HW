@@ -19,3 +19,53 @@ exports.getTrafficData = functions.https.onRequest((req, res) => {
         }
     });
 });
+
+exports.deleteTrafficEntry = functions.https.onRequest((req, res) => {
+    corsHandler(req, res, async () => {
+        if (req.method !== "DELETE") {
+            return res.status(405).send("Method Not Allowed");
+        }
+
+        const id = req.query.id;
+
+        if (!id) {
+            return res.status(400).send("Missing ID parameter");
+        }
+
+        try {
+            const db = admin.firestore();
+            await db.collection("trafficStats").doc(id).delete();
+            res.status(200).send("Entry deleted successfully");
+        } catch (error) {
+            console.error("Error deleting entry:", error);
+            res.status(500).send("Internal Server Error");
+        }
+    });
+});
+
+exports.addTrafficEntry = functions.https.onRequest((req, res) => {
+    corsHandler(req, res, async () => {
+        if (req.method !== "POST") {
+            return res.status(405).send("Method Not Allowed");
+        }
+
+        const { date, visits } = req.body;
+
+        if (!date || typeof visits !== "number") {
+            return res.status(400).send("Missing or invalid parameters");
+        }
+
+        try {
+            const db = admin.firestore();
+            const newEntry = {
+                date,
+                visits
+            };
+            const docRef = await db.collection("trafficStats").add(newEntry);
+            res.status(200).json({ id: docRef.id, ...newEntry });
+        } catch (error) {
+            console.error("Error adding traffic entry:", error);
+            res.status(500).send("Internal Server Error");
+        }
+    });
+});

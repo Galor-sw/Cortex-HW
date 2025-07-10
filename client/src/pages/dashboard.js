@@ -5,12 +5,15 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../firebase/config";
 import TrafficTable from "../components/trafficTable";
 import TrafficChart from "../components/trafficChart";
+import DeleteConfirmation from "../components/deleteConfirmation";
 
 const Dashboard = () => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [trafficData, setTrafficData] = useState([]);
     const [viewType, setViewType] = useState("table");
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [selectedEntry, setSelectedEntry] = useState(null);
     const navigate = useNavigate();
 
     const handleLogout = async () => {
@@ -89,11 +92,29 @@ const Dashboard = () => {
                     </button>
                 </div>
                 {viewType === "table" ? (
-                    <TrafficTable trafficData={trafficData} setTrafficData={setTrafficData} />
+                    <TrafficTable
+                      trafficData={trafficData}
+                      setTrafficData={setTrafficData}
+                      onDelete={(entry) => {
+                        setSelectedEntry(entry);
+                        setShowDeleteModal(true);
+                      }}
+                    />
                 ) : (
                     <TrafficChart trafficData={trafficData} />
                 )}
             </div>
+
+            {showDeleteModal && selectedEntry && (
+                <DeleteConfirmation
+                  entry={selectedEntry}
+                  onCancel={() => setShowDeleteModal(false)}
+                  onDeleteSuccess={(deletedId) => {
+                    setTrafficData(prev => prev.filter(e => e.id !== deletedId));
+                    setShowDeleteModal(false);
+                  }}
+                />
+            )}
         </div>
     );
 };
