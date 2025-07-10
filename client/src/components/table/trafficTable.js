@@ -109,7 +109,7 @@ const TrafficTable = ({ trafficData, setTrafficData }) => {
                 {isEditor && (
                     <div className="flex justify-end ml-auto">
                         <img
-                            src={addDataIcon} // ודא שייבאת את האייקון מ assets בשם המתאים
+                            src={addDataIcon}
                             alt="Add"
                             title="Add new entries"
                             className="w-8 h-8 cursor-pointer"

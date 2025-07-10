@@ -70,7 +70,7 @@ const Dashboard = () => {
             <Header user={user} handleLogout={handleLogout} />
 
             <div className="max-w-3xl mx-auto mt-8 p-6 bg-white shadow rounded">
-                <div className="flex justify-between items-center mb-10">
+                <div className="flex justify-between items-center mb-5 md:mb-10">
                     <h2 className="text-lg font-semibold">Website Traffic</h2>
                     <TableGraphToggle viewType={viewType} setViewType={setViewType} />
                 </div>
