@@ -54,6 +54,7 @@ This project is a professional website traffic management dashboard developed as
 
 - **Firestore Database** to store traffic records
 - **Firebase Functions** (Cloud) to serve traffic data
+- **Firebase Hosting** to deploy the frontend to production
 
 ---
 
@@ -104,3 +105,8 @@ User roles are stored in the Firestore `roles` collection by UID. Role checking 
 - Only an admin with access to the database can manually update a user's role to `editor`.
 
 ---
+
+## ⚙️ CI/CD
+
+- Continuous deployment is configured via Firebase Hosting.
+- When changes are pushed to the `main` branch, Firebase automatically builds and deploys the updated frontend using GitHub Actions or Firebase CLI.
