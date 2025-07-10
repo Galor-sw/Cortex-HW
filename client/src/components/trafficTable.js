@@ -3,8 +3,9 @@ import { auth, db } from "../firebase/config";
 import { getDoc, doc } from "firebase/firestore";
 import editIcon from "../assets/edit.png";
 import deleteIcon from "../assets/delete.png";
+import AddEntries from "./addEntries";
 
-const TrafficTable = ({ trafficData, setTrafficData }) => {
+const TrafficTable = ({ trafficData, setTrafficData, onDelete }) => {
     const [selectedDate, setSelectedDate] = useState("");
     const [showForm, setShowForm] = useState(false);
     const [newDate, setNewDate] = useState("");
@@ -58,6 +59,11 @@ const TrafficTable = ({ trafficData, setTrafficData }) => {
         }
     };
 
+    const handleDeleteClick = (entry) => {
+        if (typeof onDelete === "function") {
+            onDelete(entry);
+        }
+    };
     return (
         <div>
             <div className="flex justify-between items-center mb-4">
@@ -141,6 +147,7 @@ const TrafficTable = ({ trafficData, setTrafficData }) => {
                                                 alt="Delete"
                                                 title="Delete"
                                                 className="w-5 h-5 cursor-pointer"
+                                                onClick={() => handleDeleteClick(entry)}
                                             />
                                         </div>
                                     )}
@@ -154,43 +161,14 @@ const TrafficTable = ({ trafficData, setTrafficData }) => {
             )}
 
             {showForm && (
-                <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-40 flex items-center justify-center">
-                    <div className="bg-white p-6 rounded shadow-md w-full max-w-sm">
-                        <h2 className="text-xl font-bold mb-4">Add Traffic Entry</h2>
-                        <label className="block mb-2">
-                            Date:
-                            <input
-                                type="date"
-                                className="w-full border border-gray-300 rounded px-2 py-1"
-                                value={newDate}
-                                onChange={(e) => setNewDate(e.target.value)}
-                            />
-                        </label>
-                        <label className="block mb-4">
-                            Visits:
-                            <input
-                                type="number"
-                                className="w-full border border-gray-300 rounded px-2 py-1"
-                                value={newVisits}
-                                onChange={(e) => setNewVisits(e.target.value)}
-                            />
-                        </label>
-                        <div className="flex justify-end gap-2">
-                            <button
-                                className="px-4 py-1 bg-gray-300 rounded hover:bg-gray-400"
-                                onClick={() => setShowForm(false)}
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                className="px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
-                                onClick={handleAddEntry}
-                            >
-                                Add
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                <AddEntries
+                    newDate={newDate}
+                    setNewDate={setNewDate}
+                    newVisits={newVisits}
+                    setNewVisits={setNewVisits}
+                    handleAddEntry={handleAddEntry}
+                    setShowForm={setShowForm}
+                />
             )}
         </div>
     );
