@@ -6,6 +6,7 @@ import deleteIcon from "../assets/delete.png";
 import AddEntries from "./addEntries";
 
 const TrafficTable = ({ trafficData, setTrafficData, onDelete }) => {
+    const [currentSort, setCurrentSort] = useState("random");
     const [selectedDate, setSelectedDate] = useState("");
     const [showForm, setShowForm] = useState(false);
     const [newDate, setNewDate] = useState("");
@@ -18,9 +19,7 @@ const TrafficTable = ({ trafficData, setTrafficData, onDelete }) => {
             if (user) {
                 try {
                     const docRef = doc(db, "roles", user.uid);
-                    console.log(user.uid)
                     const docSnap = await getDoc(docRef);
-                    console.log(docSnap)
                     if (docSnap.exists() && docSnap.data().role === "editor") {
                         setIsEditor(true);
                     }
@@ -33,6 +32,7 @@ const TrafficTable = ({ trafficData, setTrafficData, onDelete }) => {
     }, []);
 
     const handleSort = (sortBy) => {
+        setCurrentSort(sortBy);
         if (sortBy === "random") {
             setTrafficData([...trafficData]);
         } else {
@@ -52,7 +52,15 @@ const TrafficTable = ({ trafficData, setTrafficData, onDelete }) => {
 
     const handleAddEntry = () => {
         if (newDate && newVisits) {
-            setTrafficData([...trafficData, { date: newDate, visits: parseInt(newVisits) }]);
+            const updatedData = [...trafficData, { date: newDate, visits: parseInt(newVisits) }];
+
+            if (currentSort === "date") {
+                updatedData.sort((a, b) => new Date(b.date) - new Date(a.date));
+            } else if (currentSort === "visits") {
+                updatedData.sort((a, b) => b.visits - a.visits);
+            }
+
+            setTrafficData(updatedData);
             setShowForm(false);
             setNewDate("");
             setNewVisits("");
@@ -64,6 +72,7 @@ const TrafficTable = ({ trafficData, setTrafficData, onDelete }) => {
             onDelete(entry);
         }
     };
+
     return (
         <div>
             <div className="flex justify-between items-center mb-4">
@@ -168,6 +177,8 @@ const TrafficTable = ({ trafficData, setTrafficData, onDelete }) => {
                     setNewVisits={setNewVisits}
                     handleAddEntry={handleAddEntry}
                     setShowForm={setShowForm}
+                    setTrafficData={setTrafficData}
+                    currentSort={currentSort}
                 />
             )}
         </div>
