@@ -61,7 +61,7 @@ const TrafficChart = ({ trafficData }) => {
     }, [viewMode, selectedMonth, selectedYear, trafficData]);
 
     return (
-        <div>
+        <div className="px-4 py-2">
             <SortGraph
                 viewMode={viewMode}
                 setViewMode={setViewMode}
@@ -72,14 +72,16 @@ const TrafficChart = ({ trafficData }) => {
                 trafficData={trafficData}
             />
 
-            <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={filteredData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
-                    <XAxis dataKey="label" stroke="#374151" />
-                    <YAxis stroke="#374151" />
-                    <Tooltip />
-                    <Line type="monotone" dataKey="visits" stroke="#3B82F6" strokeWidth={2} dot={{ r: 3 }} activeDot={{ r: 5 }} />
-                </LineChart>
-            </ResponsiveContainer>
+            <div className="min-h-[250px]">
+                <ResponsiveContainer width="100%" height={300}>
+                    <LineChart data={filteredData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+                        <XAxis dataKey="label" stroke="#374151" tick={{ fontSize: 12 }} />
+                        <YAxis stroke="#374151" tick={{ fontSize: 12 }} />
+                        <Tooltip />
+                        <Line type="monotone" dataKey="visits" stroke="#3B82F6" strokeWidth={2} dot={{ r: 3 }} activeDot={{ r: 5 }} />
+                    </LineChart>
+                </ResponsiveContainer>
+            </div>
         </div>
     );
 };
