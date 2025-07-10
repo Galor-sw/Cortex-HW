@@ -31,9 +31,9 @@ const Login = () => {
             navigate("/dashboard");
         } catch (error) {
             if (error.code === "auth/invalid-credential") {
-                setError("Invalid email or password.");
+                setError("Invalid email or password");
             } else {
-                setError(error.message);
+                setError("Invalid email or password");
             }
         }
     };
@@ -45,11 +45,11 @@ const Login = () => {
             navigate("/dashboard");
         } catch (error) {
             if (error.code === "auth/invalid-credential") {
-                setError("Invalid email or password.");
+                setError("Invalid email or password");
             } else if (error.code === "auth/email-already-in-use") {
                 setError("This email is already registered. Please log in instead.");
             } else {
-                setError(error.message);
+                setError("Fill email or password");
             }
         }
     };
@@ -57,6 +57,13 @@ const Login = () => {
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
             <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm border border-gray-200">
+                <div className="flex flex-col items-center mb-6">
+                    <img src={require("../assets/cortex.jpeg")} alt="Cortex Logo" className="w-20 h-20 mb-2" />
+                    <h2 className="text-lg font-semibold text-gray-800 text-center">Cortex Real Estate</h2>
+                    <p className="text-sm text-gray-600 text-center px-2">
+                        Leading the AI Revolution in Real Estate Management
+                    </p>
+                </div>
                 <h1 className="text-3xl font-semibold text-center mb-5">Login</h1>
                 {error && (
                     <div className="mb-4 text-red-600 text-center text-sm">{error}</div>

@@ -3,17 +3,16 @@ import { useNavigate } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../firebase/config";
-import TrafficTable from "../components/trafficTable";
-import TrafficChart from "../components/trafficChart";
-import DeleteConfirmation from "../components/deleteConfirmation";
+import TrafficTable from "../components/table/trafficTable";
+import TrafficChart from "../components/graph/trafficGraph";
+import TableGraphToggle from "../components/tableGraphToggle";
+import Header from "../components/header";
 
 const Dashboard = () => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [trafficData, setTrafficData] = useState([]);
     const [viewType, setViewType] = useState("table");
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [selectedEntry, setSelectedEntry] = useState(null);
     const navigate = useNavigate();
 
     const handleLogout = async () => {
@@ -68,53 +67,22 @@ const Dashboard = () => {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <div className="bg-white shadow p-4 flex justify-between items-center">
-                <h1 className="text-xl font-bold">Dashboard</h1>
-                <div className="flex items-center gap-4">
-                    <span className="text-sm text-gray-700">{user?.email}</span>
-                    <button
-                        onClick={handleLogout}
-                        className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-                    >
-                        Logout
-                    </button>
-                </div>
-            </div>
+            <Header user={user} handleLogout={handleLogout} />
 
             <div className="max-w-3xl mx-auto mt-8 p-6 bg-white shadow rounded">
-                <div className="flex justify-between items-center mb-4">
+                <div className="flex justify-between items-center mb-10">
                     <h2 className="text-lg font-semibold">Website Traffic</h2>
-                    <button
-                        onClick={() => setViewType(viewType === "table" ? "chart" : "table")}
-                        className="text-sm px-3 py-1 border border-gray-300 rounded hover:bg-gray-100"
-                    >
-                        {viewType === "table" ? "Chart" : "Table"}
-                    </button>
+                    <TableGraphToggle viewType={viewType} setViewType={setViewType} />
                 </div>
                 {viewType === "table" ? (
                     <TrafficTable
                       trafficData={trafficData}
                       setTrafficData={setTrafficData}
-                      onDelete={(entry) => {
-                        setSelectedEntry(entry);
-                        setShowDeleteModal(true);
-                      }}
                     />
                 ) : (
                     <TrafficChart trafficData={trafficData} />
                 )}
             </div>
-
-            {showDeleteModal && selectedEntry && (
-                <DeleteConfirmation
-                  entry={selectedEntry}
-                  onCancel={() => setShowDeleteModal(false)}
-                  onDeleteSuccess={(deletedId) => {
-                    setTrafficData(prev => prev.filter(e => e.id !== deletedId));
-                    setShowDeleteModal(false);
-                  }}
-                />
-            )}
         </div>
     );
 };
